@@ -31,12 +31,20 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      - name: Verify GH_PACKAGES_TOKEN
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: |
+          if [ -z "$GH_PACKAGES_TOKEN" ]; then
+            echo "::error::Falta el secret GH_PACKAGES_TOKEN. Crea un PAT (classic) con read:packages y configúralo en Settings → Secrets → Actions."
+            exit 1
+          fi
+          echo "GH_PACKAGES_TOKEN presente (${#GH_PACKAGES_TOKEN} chars)."
+
       - name: Build and test
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          # PAT con read:packages para consumir el SDK desde MiniJuegosSdk
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew :buscaminas:assembleRelease :buscaminas:test :app:assembleDebug --no-daemon
 
       - name: Publish AAR to GitHub Packages

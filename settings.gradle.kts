@@ -16,13 +16,20 @@ plugins {
 }
 
 val githubOwner = "AlejandroHP17"
-val gprUser: Provider<String> = providers.gradleProperty("gpr.user")
-    .orElse(providers.environmentVariable("GITHUB_ACTOR"))
-    .orElse(githubOwner)
-val gprToken: Provider<String> = providers.gradleProperty("gpr.token")
-    .orElse(providers.environmentVariable("GH_PACKAGES_TOKEN"))
-    .orElse(providers.environmentVariable("GITHUB_TOKEN"))
-    .orElse("")
+
+fun firstNonBlank(vararg values: String?): String =
+    values.mapNotNull { it?.trim()?.takeIf(String::isNotEmpty) }.firstOrNull().orEmpty()
+
+val gprUser = firstNonBlank(
+    providers.gradleProperty("gpr.user").orNull,
+    System.getenv("GITHUB_ACTOR"),
+    githubOwner,
+)
+val gprToken = firstNonBlank(
+    providers.gradleProperty("gpr.token").orNull,
+    System.getenv("GH_PACKAGES_TOKEN"),
+    System.getenv("GITHUB_TOKEN"),
+)
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -34,8 +41,8 @@ dependencyResolutionManagement {
             name = "GitHubPackagesMiniJuegosSdk"
             url = uri("https://maven.pkg.github.com/$githubOwner/MiniJuegosSdk")
             credentials {
-                username = gprUser.get()
-                password = gprToken.get()
+                username = gprUser
+                password = gprToken
             }
         }
     }
