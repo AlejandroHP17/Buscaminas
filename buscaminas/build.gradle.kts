@@ -4,6 +4,11 @@ plugins {
     `maven-publish`
 }
 
+val githubOwner = "AlejandroHP17"
+val githubRepo = "Buscaminas"
+val publishVersion =
+    providers.environmentVariable("PUBLISH_VERSION").orElse("1.0.0-SNAPSHOT").get()
+
 android {
     namespace = "pelkidev.com.mx.buscaminas"
     compileSdk {
@@ -69,10 +74,27 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "pelkidev.com.mx.minijuegos"
             artifactId = "buscaminas"
-            version = "1.0.0-SNAPSHOT"
+            version = publishVersion
 
             afterEvaluate {
                 from(components["release"])
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/$githubOwner/$githubRepo")
+            credentials {
+                username = providers.gradleProperty("gpr.user")
+                    .orElse(providers.environmentVariable("GITHUB_ACTOR"))
+                    .orElse(githubOwner)
+                    .get()
+                password = providers.gradleProperty("gpr.token")
+                    .orElse(providers.environmentVariable("GH_PACKAGES_TOKEN"))
+                    .orElse(providers.environmentVariable("GITHUB_TOKEN"))
+                    .orElse("")
+                    .get()
             }
         }
     }
