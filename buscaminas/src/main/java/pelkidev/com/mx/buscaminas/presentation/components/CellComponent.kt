@@ -118,6 +118,12 @@ private fun cellBackgroundModifier(cell: Cell, gameStatus: GameStatus): Modifier
                 .background(MineCellExploded)
                 .border(1.dp, MineCellRevealedBorder)
         }
+        // Bandera correcta sobre una bomba al perder
+        cell.isRevealed && cell.isMine && cell.isFlagged -> {
+            Modifier
+                .background(MineCellFlagged)
+                .border(1.dp, MineCellRevealedBorder)
+        }
         cell.isRevealed && cell.isMine -> {
             Modifier
                 .background(MineCellExploded.copy(alpha = 0.85f))
