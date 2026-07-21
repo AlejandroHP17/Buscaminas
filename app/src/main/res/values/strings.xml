@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Buscaminas</string>
+    <string name="start_subtitle">Selecciona la dificultad y pulsa Empezar</string>
+    <string name="start_game">Nueva partida</string>
+    <string name="continue_game">Continuar (%1$s · %2$s)</string>
+    <string name="difficulty_description">%1$d×%2$d · %3$d minas</string>
+    <string name="back">Volver</string>
+    <string name="game_won">¡Victoria! 🎉</string>
+    <string name="game_lost">¡Has tocado una mina!</string>
+</resources>
