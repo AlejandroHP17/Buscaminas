@@ -19,9 +19,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
     }
 }
 
 rootProject.name = "Buscaminas"
 include(":app")
- 
+include(":buscaminas")

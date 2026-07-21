@@ -1,6 +1,7 @@
 package pelkidev.com.mx.buscaminas.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
@@ -16,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,15 +37,31 @@ fun StartScreen(
     onDifficultySelected: (Difficulty) -> Unit,
     onStartGame: () -> Unit,
     onContinueGame: () -> Unit,
+    onExit: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
+        if (onExit != null) {
+            IconButton(
+                onClick = onExit,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(android.R.drawable.ic_menu_revert),
+                    contentDescription = stringResource(R.string.buscaminas_back),
+                )
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
         Text(
             text = "💣",
             fontSize = 64.sp,
@@ -50,7 +70,7 @@ fun StartScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(R.string.buscaminas_title),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
         )
@@ -58,7 +78,7 @@ fun StartScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.start_subtitle),
+            text = stringResource(R.string.buscaminas_start_subtitle),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -90,7 +110,7 @@ fun StartScreen(
             ) {
                 Text(
                     text = stringResource(
-                        R.string.continue_game,
+                        R.string.buscaminas_continue_game,
                         savedGameInfo.difficulty.displayName,
                         formatElapsedTime(savedGameInfo.elapsedSeconds),
                     ),
@@ -107,9 +127,10 @@ fun StartScreen(
             modifier = Modifier.fillMaxWidth(0.7f),
         ) {
             Text(
-                text = stringResource(R.string.start_game),
+                text = stringResource(R.string.buscaminas_start_game),
                 modifier = Modifier.padding(vertical = 4.dp),
             )
+        }
         }
     }
 }
@@ -145,7 +166,7 @@ private fun DifficultyOption(
             )
             Text(
                 text = stringResource(
-                    R.string.difficulty_description,
+                    R.string.buscaminas_difficulty_description,
                     difficulty.cols,
                     difficulty.rows,
                     difficulty.mineCount,

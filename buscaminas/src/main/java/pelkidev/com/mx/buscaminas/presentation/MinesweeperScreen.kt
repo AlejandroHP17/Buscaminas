@@ -31,6 +31,7 @@ import pelkidev.com.mx.buscaminas.presentation.components.StartScreen
 
 @Composable
 fun MinesweeperScreen(
+    onExit: (() -> Unit)? = null,
     viewModel: MinesweeperViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -44,6 +45,7 @@ fun MinesweeperScreen(
                 onDifficultySelected = viewModel::selectDifficulty,
                 onStartGame = viewModel::startGame,
                 onContinueGame = viewModel::continueGame,
+                onExit = onExit,
             )
         }
 
@@ -81,7 +83,7 @@ private fun GameScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             painter = painterResource(android.R.drawable.ic_menu_revert),
-                            contentDescription = stringResource(R.string.back),
+                            contentDescription = stringResource(R.string.buscaminas_back),
                         )
                     }
                 },
@@ -118,8 +120,8 @@ private fun GameScreen(
             if (uiState.gameStatus == GameStatus.WON || uiState.gameStatus == GameStatus.LOST) {
                 Text(
                     text = when (uiState.gameStatus) {
-                        GameStatus.WON -> stringResource(R.string.game_won)
-                        GameStatus.LOST -> stringResource(R.string.game_lost)
+                        GameStatus.WON -> stringResource(R.string.buscaminas_game_won)
+                        GameStatus.LOST -> stringResource(R.string.buscaminas_game_lost)
                         else -> ""
                     },
                     modifier = Modifier

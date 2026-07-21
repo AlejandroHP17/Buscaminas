@@ -1,10 +1,11 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
+    `maven-publish`
 }
 
 android {
-    namespace = "pelkidev.com.mx.buscaminas.app"
+    namespace = "pelkidev.com.mx.buscaminas"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -12,14 +13,12 @@ android {
     }
 
     defaultConfig {
-        applicationId = "pelkidev.com.mx.buscaminas"
         minSdk = 29
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
+        consumerProguardFiles("consumer-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    resourcePrefix = "buscaminas_"
 
     buildTypes {
         release {
@@ -30,31 +29,51 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
 }
 
 dependencies {
-    implementation(project(":buscaminas"))
+    api("pelkidev.com.mx.minijuegos:sdk:1.0.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "pelkidev.com.mx.minijuegos"
+            artifactId = "buscaminas"
+            version = "1.0.0-SNAPSHOT"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
 }
