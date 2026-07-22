@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -46,6 +47,7 @@ fun StartScreen(
                 onClick = onExit,
                 modifier = Modifier
                     .align(Alignment.TopStart)
+                    .statusBarsPadding()
                     .padding(8.dp),
             ) {
                 Icon(
