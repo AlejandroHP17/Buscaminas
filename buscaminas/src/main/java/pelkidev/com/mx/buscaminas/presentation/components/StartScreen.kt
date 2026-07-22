@@ -90,21 +90,7 @@ fun StartScreen(
             .fillMaxSize()
             .padding(top = 16.dp),
     ) {
-        if (onExit != null) {
-            IconButton(
-                onClick = onExit,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .statusBarsPadding()
-                    .padding(8.dp),
-            ) {
-                Icon(
-                    painter = painterResource(android.R.drawable.ic_menu_revert),
-                    contentDescription = stringResource(R.string.buscaminas_back),
-                )
-            }
-        }
-
+        // El Column va primero; el botón de salida se dibuja encima para recibir toques.
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -186,6 +172,21 @@ fun StartScreen(
                 Text(
                     text = stringResource(R.string.buscaminas_start_game),
                     modifier = Modifier.padding(vertical = 4.dp),
+                )
+            }
+        }
+
+        if (onExit != null) {
+            IconButton(
+                onClick = onExit,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .statusBarsPadding()
+                    .padding(8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(android.R.drawable.ic_menu_revert),
+                    contentDescription = stringResource(R.string.buscaminas_back),
                 )
             }
         }
