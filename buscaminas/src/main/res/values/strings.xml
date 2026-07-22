@@ -1,9 +1,12 @@
 <resources>
     <string name="buscaminas_title">Buscaminas</string>
-    <string name="buscaminas_start_subtitle">Selecciona la dificultad y pulsa Empezar</string>
+    <string name="buscaminas_start_subtitle">Selecciona la dificultad y pulsa Nueva partida</string>
     <string name="buscaminas_start_game">Nueva partida</string>
     <string name="buscaminas_continue_game">Continuar (%1$s · %2$s)</string>
     <string name="buscaminas_difficulty_description">%1$d×%2$d · %3$d minas</string>
+    <string name="buscaminas_custom_base">Base</string>
+    <string name="buscaminas_custom_height">Altura</string>
+    <string name="buscaminas_custom_mines">Minas</string>
     <string name="buscaminas_back">Volver</string>
     <string name="buscaminas_game_won">¡Victoria! 🎉</string>
     <string name="buscaminas_game_lost">¡Has tocado una mina!</string>

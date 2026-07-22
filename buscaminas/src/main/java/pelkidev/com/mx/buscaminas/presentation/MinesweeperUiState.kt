@@ -15,6 +15,9 @@ enum class AppScreen {
 data class MinesweeperUiState(
     val screen: AppScreen = AppScreen.START,
     val selectedDifficulty: Difficulty = Difficulty.BEGINNER,
+    val customRows: Int = Difficulty.PERSONALIZED.rows,
+    val customCols: Int = Difficulty.PERSONALIZED.cols,
+    val customMineCount: Int = Difficulty.PERSONALIZED.mineCount,
     val board: Board = Board.empty(
         rows = Difficulty.BEGINNER.rows,
         cols = Difficulty.BEGINNER.cols,

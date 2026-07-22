@@ -42,18 +42,59 @@ class MinesweeperViewModel(
         _uiState.update { it.copy(selectedDifficulty = difficulty) }
     }
 
+    fun updateCustomCols(cols: Int) {
+        _uiState.update { state ->
+            val clampedCols = cols.coerceIn(Difficulty.CUSTOM_MIN_SIZE, Difficulty.CUSTOM_MAX_SIZE)
+            val maxMines = (state.customRows * clampedCols - 1).coerceAtLeast(Difficulty.CUSTOM_MIN_MINES)
+            state.copy(
+                customCols = clampedCols,
+                customMineCount = state.customMineCount.coerceIn(Difficulty.CUSTOM_MIN_MINES, maxMines),
+            )
+        }
+    }
+
+    fun updateCustomRows(rows: Int) {
+        _uiState.update { state ->
+            val clampedRows = rows.coerceIn(Difficulty.CUSTOM_MIN_SIZE, Difficulty.CUSTOM_MAX_SIZE)
+            val maxMines = (clampedRows * state.customCols - 1).coerceAtLeast(Difficulty.CUSTOM_MIN_MINES)
+            state.copy(
+                customRows = clampedRows,
+                customMineCount = state.customMineCount.coerceIn(Difficulty.CUSTOM_MIN_MINES, maxMines),
+            )
+        }
+    }
+
+    fun updateCustomMineCount(mines: Int) {
+        _uiState.update { state ->
+            val maxMines = (state.customRows * state.customCols - 1).coerceAtLeast(Difficulty.CUSTOM_MIN_MINES)
+            state.copy(
+                customMineCount = mines.coerceIn(Difficulty.CUSTOM_MIN_MINES, maxMines),
+            )
+        }
+    }
+
     fun startGame() {
         viewModelScope.launch {
             gameSaveRepository.clearSavedGame()
-            val difficulty = _uiState.value.selectedDifficulty
             stopTimer()
-            _uiState.value = MinesweeperUiState(
-                screen = AppScreen.GAME,
-                selectedDifficulty = difficulty,
-                board = createEmptyBoard(difficulty),
-                gameStatus = GameStatus.NOT_STARTED,
-                elapsedSeconds = 0,
-            )
+            _uiState.update { state ->
+                val boardConfig = resolveBoardConfig(state)
+                state.copy(
+                    screen = AppScreen.GAME,
+                    customRows = boardConfig.rows,
+                    customCols = boardConfig.cols,
+                    customMineCount = boardConfig.mineCount,
+                    board = Board.empty(
+                        rows = boardConfig.rows,
+                        cols = boardConfig.cols,
+                        mineCount = boardConfig.mineCount,
+                    ),
+                    gameStatus = GameStatus.NOT_STARTED,
+                    elapsedSeconds = 0,
+                    hasSavedGame = false,
+                    savedGameInfo = null,
+                )
+            }
             persistCurrentGame()
         }
     }
@@ -65,6 +106,9 @@ class MinesweeperViewModel(
             _uiState.value = MinesweeperUiState(
                 screen = AppScreen.GAME,
                 selectedDifficulty = saved.difficulty,
+                customRows = saved.board.rows,
+                customCols = saved.board.cols,
+                customMineCount = saved.board.mineCount,
                 board = saved.board,
                 gameStatus = saved.gameStatus,
                 elapsedSeconds = saved.elapsedSeconds,
@@ -189,13 +233,31 @@ class MinesweeperViewModel(
         return state.gameStatus == GameStatus.NOT_STARTED || state.gameStatus == GameStatus.PLAYING
     }
 
-    private fun createEmptyBoard(difficulty: Difficulty): Board {
-        return Board.empty(
-            rows = difficulty.rows,
-            cols = difficulty.cols,
-            mineCount = difficulty.mineCount,
-        )
+    private fun resolveBoardConfig(state: MinesweeperUiState): BoardConfig {
+        val difficulty = state.selectedDifficulty
+        return if (difficulty == Difficulty.PERSONALIZED) {
+            val rows = state.customRows.coerceIn(Difficulty.CUSTOM_MIN_SIZE, Difficulty.CUSTOM_MAX_SIZE)
+            val cols = state.customCols.coerceIn(Difficulty.CUSTOM_MIN_SIZE, Difficulty.CUSTOM_MAX_SIZE)
+            val maxMines = (rows * cols - 1).coerceAtLeast(Difficulty.CUSTOM_MIN_MINES)
+            BoardConfig(
+                rows = rows,
+                cols = cols,
+                mineCount = state.customMineCount.coerceIn(Difficulty.CUSTOM_MIN_MINES, maxMines),
+            )
+        } else {
+            BoardConfig(
+                rows = difficulty.rows,
+                cols = difficulty.cols,
+                mineCount = difficulty.mineCount,
+            )
+        }
     }
+
+    private data class BoardConfig(
+        val rows: Int,
+        val cols: Int,
+        val mineCount: Int,
+    )
 
     private fun startTimer() {
         if (timerJob?.isActive == true) return

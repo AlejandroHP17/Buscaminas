@@ -40,9 +40,15 @@ fun MinesweeperScreen(
         AppScreen.START -> {
             StartScreen(
                 selectedDifficulty = uiState.selectedDifficulty,
+                customCols = uiState.customCols,
+                customRows = uiState.customRows,
+                customMineCount = uiState.customMineCount,
                 hasSavedGame = uiState.hasSavedGame,
                 savedGameInfo = uiState.savedGameInfo,
                 onDifficultySelected = viewModel::selectDifficulty,
+                onCustomColsChanged = viewModel::updateCustomCols,
+                onCustomRowsChanged = viewModel::updateCustomRows,
+                onCustomMineCountChanged = viewModel::updateCustomMineCount,
                 onStartGame = viewModel::startGame,
                 onContinueGame = viewModel::continueGame,
                 onExit = onExit,

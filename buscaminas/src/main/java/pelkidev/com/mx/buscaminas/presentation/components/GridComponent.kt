@@ -60,4 +60,5 @@ private fun cellSizeForDifficulty(difficulty: Difficulty): Dp = when (difficulty
     Difficulty.BEGINNER -> 36.dp
     Difficulty.INTERMEDIATE -> 34.dp
     Difficulty.EXPERT -> 32.dp
+    Difficulty.PERSONALIZED -> 30.dp
 }
