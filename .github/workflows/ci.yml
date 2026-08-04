@@ -53,5 +53,5 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_VERSION: "1.0.0-SNAPSHOT"
+          PUBLISH_VERSION: "1.0.1"
         run: ./gradlew :buscaminas:publishReleasePublicationToGitHubPackagesRepository --no-daemon --refresh-dependencies
