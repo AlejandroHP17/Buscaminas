@@ -182,7 +182,7 @@ fun StartScreen(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .statusBarsPadding()
-                    .padding(8.dp),
+                    .padding(16.dp),
             ) {
                 Icon(
                     painter = painterResource(android.R.drawable.ic_menu_revert),
