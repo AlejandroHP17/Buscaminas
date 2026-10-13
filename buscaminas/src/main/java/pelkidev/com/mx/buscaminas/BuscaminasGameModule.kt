@@ -8,7 +8,7 @@ import pelkidev.com.mx.minijuegos.sdk.GameModule
 object BuscaminasGameModule : GameModule {
     override val id: String = "buscaminas"
     override val title: String = "Buscaminas"
-    override val description: String = "Encuentra todas las minas sin explotar ninguna"
+    override val description: String = "Marca las minas y despeja el tablero sin fallar"
 
     @Composable
     override fun Entry(onExit: () -> Unit) {
